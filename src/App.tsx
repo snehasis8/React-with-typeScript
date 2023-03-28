@@ -2,8 +2,9 @@ import "./styles.css";
 import { Input } from "./Component/Input";
 
 import { useState } from "react";
+import { List } from "./Component/List";
 
-type todoListProperty = {
+export type todoListProperty = {
   // isDone?: boolean;
   item: string;
   isDone: boolean;
@@ -21,8 +22,11 @@ const App: React.FC = () => {
     console.log(e);
 
     e.preventDefault();
-    setTodoList([...todoList, { isDone: false, item: todoItem }]);
-    setTodoItem("");
+    if(todoItem){
+      setTodoList([...todoList, { isDone: false, item: todoItem }]);
+      setTodoItem("");
+    }
+    
   };
 
   console.log(todoList);
@@ -34,10 +38,8 @@ const App: React.FC = () => {
         addTodo={handleClick}
       />
       {/* <button onClick={handleClick}> add Item </button> */}
-      {todoList.length > 0 &&
-        todoList.map((el) => {
-          return <div> {el.item} </div>;
-        })}
+    
+        <List isEmpty={!!todoList.length} list={todoList} />
     </div>
   );
 };
