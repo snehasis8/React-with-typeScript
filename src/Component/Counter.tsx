@@ -23,7 +23,7 @@ const reducer = (state: any, action: any) => {
 
 
 
-const Counter = () => {
+const Counter: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, { count: 0 })
   const [inputVal, setInpuutVal] = useState<string>('');
   return (

@@ -3,14 +3,15 @@ import SingleList from "./SingleList";
 type ListProps = {
   isEmpty: boolean;
   list: todoListProperty[];
+  handleisDone: (e: React.ChangeEvent<HTMLInputElement>, id: number) => void
 };
 
-export const List = ({ isEmpty, list }: ListProps) => (
+export const List = ({ isEmpty, list, handleisDone }: ListProps) => (
   <div>
 
     {isEmpty &&
       list.map(({ isDone, id, item }) => (
-        <SingleList id={id} isDone={isDone} key={id} item={item} />
+        <SingleList key={id} handleIsDone={handleisDone} id={id} isDone={isDone} item={item} />
       ))}
   </div>
 );

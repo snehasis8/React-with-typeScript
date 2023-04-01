@@ -1,37 +1,77 @@
 import "./styles.css";
 import { Input } from "./Component/Input";
-
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import { List } from "./Component/List";
-import Counter from "./Component/Counter";
+import { ACTIONS } from "./Component/Actions/TodoAction";
 
 export type todoListProperty = {
-  // isDone?: boolean;
   item: string;
   isDone: boolean;
-  id: number
+  id: number;
 };
+
+type actionType = {
+  payload: todoListProperty;
+  type: 'ADD_TODO' | 'DELETE_TODO' | "EDIT_TODO" | 'DONE_TODO';
+}
+
+const reducer = (state: todoListProperty[], action: actionType) => {
+  switch (action.type) {
+    case ACTIONS.ADD_TODO:
+      return [...state, action.payload];
+    case ACTIONS.DONE_TODO:
+      return [...state.map((el) => {
+        if (el.id = action.payload.id) {
+          return {
+            ...el,
+            isDone: !el.isDone
+          }
+        } else {
+          return el
+        }
+
+      })];
+
+    default:
+      return state;
+  }
+}
+
+function addTodo(item: string) {
+  console.log(item);
+  return { isDone: false, id: Date.now(), item: item }
+}
+
+// function editTodo(id: number) {
+
+// }
 
 const App: React.FC = () => {
   const [todoItem, setTodoItem] = useState<string>("");
-  const [todoList, setTodoList] = useState<todoListProperty[]>([]);
+  const [todoList, dispatch] = useReducer(reducer, []);
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     setTodoItem(e.target.value);
-  };
+  }
 
   const handleClick = (e: React.FormEvent) => {
-    console.log(e);
-
     e.preventDefault();
     if (todoItem) {
-      setTodoList([...todoList, { isDone: false, item: todoItem, id: Date.now() }]);
+      dispatch({ type: "ADD_TODO", payload: { id: Date.now(), item: todoItem, isDone: false } })
       setTodoItem("");
     }
-
   };
 
-  console.log(todoList);
+  const handleisDone = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    console.log(e.target.checked);
+    dispatch({ type: "DONE_TODO", payload: { id: id, item: todoItem, isDone: e.target.checked } })
+  }
+
+  const handleDelete = () => {
+
+  }
+
+
   return (
     <div className="App">
       <Input
@@ -39,11 +79,8 @@ const App: React.FC = () => {
         handleInput={handleInput}
         addTodo={handleClick}
       />
-      {/* <button onClick={handleClick}> add Item </button> */}
 
-      <List isEmpty={!!todoList.length} list={todoList} />
-
-      {/* <Counter /> */}
+      <List handleisDone={handleisDone} isEmpty={!!todoList.length} list={todoList} />
     </div>
   );
 };
