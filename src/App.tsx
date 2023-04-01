@@ -3,11 +3,13 @@ import { Input } from "./Component/Input";
 
 import { useState } from "react";
 import { List } from "./Component/List";
+import Counter from "./Component/Counter";
 
 export type todoListProperty = {
   // isDone?: boolean;
   item: string;
   isDone: boolean;
+  id: number
 };
 
 const App: React.FC = () => {
@@ -22,11 +24,11 @@ const App: React.FC = () => {
     console.log(e);
 
     e.preventDefault();
-    if(todoItem){
-      setTodoList([...todoList, { isDone: false, item: todoItem }]);
+    if (todoItem) {
+      setTodoList([...todoList, { isDone: false, item: todoItem, id: Date.now() }]);
       setTodoItem("");
     }
-    
+
   };
 
   console.log(todoList);
@@ -38,8 +40,10 @@ const App: React.FC = () => {
         addTodo={handleClick}
       />
       {/* <button onClick={handleClick}> add Item </button> */}
-    
-        <List isEmpty={!!todoList.length} list={todoList} />
+
+      <List isEmpty={!!todoList.length} list={todoList} />
+
+      {/* <Counter /> */}
     </div>
   );
 };
