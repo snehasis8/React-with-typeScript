@@ -4,24 +4,24 @@ import { useReducer, useState } from "react";
 import { List } from "./Component/List";
 import { ACTIONS } from "./Component/Actions/TodoAction";
 
-export type todoListProperty = {
+export type TodoListProperty = {
   item: string;
   isDone: boolean;
   id: number;
 };
 
-type actionType = {
-  payload: todoListProperty;
-  type: 'ADD_TODO' | 'DELETE_TODO' | "EDIT_TODO" | 'DONE_TODO';
+type ActionType = {
+  payload: TodoListProperty;
+  type: 'ADD_TODO' | 'DELETE_TODO' | 'EDIT_TODO' | 'DONE_TODO';
 }
 
-const reducer = (state: todoListProperty[], action: actionType) => {
+const reducer = (state: TodoListProperty[], action: ActionType) => {
   switch (action.type) {
     case ACTIONS.ADD_TODO:
       return [...state, action.payload];
     case ACTIONS.DONE_TODO:
       return [...state.map((el) => {
-        if (el.id = action.payload.id) {
+        if (el.id === action.payload.id) {
           return {
             ...el,
             isDone: !el.isDone
@@ -31,7 +31,6 @@ const reducer = (state: todoListProperty[], action: actionType) => {
         }
 
       })];
-
     default:
       return state;
   }
@@ -41,10 +40,6 @@ function addTodo(item: string) {
   console.log(item);
   return { isDone: false, id: Date.now(), item: item }
 }
-
-// function editTodo(id: number) {
-
-// }
 
 const App: React.FC = () => {
   const [todoItem, setTodoItem] = useState<string>("");
@@ -71,7 +66,6 @@ const App: React.FC = () => {
 
   }
 
-
   return (
     <div className="App">
       <Input
@@ -79,7 +73,6 @@ const App: React.FC = () => {
         handleInput={handleInput}
         addTodo={handleClick}
       />
-
       <List handleisDone={handleisDone} isEmpty={!!todoList.length} list={todoList} />
     </div>
   );

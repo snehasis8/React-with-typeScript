@@ -1,7 +1,7 @@
-import { todoListProperty } from "../App";
+import { TodoListProperty } from "../App";
 
 
-type SingleListProps = todoListProperty & {
+type SingleListProps = TodoListProperty & {
   isMust?: boolean;
   handleIsDone: (e: React.ChangeEvent<HTMLInputElement>, id: number) => void
 };

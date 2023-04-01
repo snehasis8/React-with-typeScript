@@ -1,8 +1,8 @@
-import { todoListProperty } from "../App";
+import { TodoListProperty } from "../App";
 import SingleList from "./SingleList";
 type ListProps = {
   isEmpty: boolean;
-  list: todoListProperty[];
+  list: TodoListProperty[];
   handleisDone: (e: React.ChangeEvent<HTMLInputElement>, id: number) => void
 };
 
