@@ -3,11 +3,12 @@ import { TodoListProperty } from "../App";
 
 import { ListProps } from "./List";
 
-type SingleListProps = TodoListProperty & {
-  isMust?: boolean;
-  handleIsDone: (e: React.ChangeEvent<HTMLInputElement>, id: number) => void;
-  handleEdit: (e: string, id: number) => void;
-};
+type SingleListProps = TodoListProperty & ListProps
+// isMust?: boolean;
+// handleIsDone: (e: React.ChangeEvent<HTMLInputElement>, id: number) => void;
+// handleEdit: (e: string, id: number) => void;
+
+
 
 //steps to integrate ant design in this project
 const SingleList = (props: SingleListProps) => {
@@ -23,7 +24,7 @@ const SingleList = (props: SingleListProps) => {
 
           type="checkbox"
           checked={props.isDone}
-          onChange={(e) => props.handleIsDone(e, props.id)}
+          onChange={(e) => props.handleisDone(e, props.id)}
         />
 
       </label>
@@ -40,6 +41,8 @@ const SingleList = (props: SingleListProps) => {
         onClick={() => {
           setEditmode(!editeMode)
         }
+
+
 
 
         }
@@ -59,8 +62,10 @@ const SingleList = (props: SingleListProps) => {
 
         }}
       >
+
         {props.isDone ? <s> {props.item} </s> : <span> {props.item} </span>}
       </div>
+      <button onClick={() => props.handleDelete(props.id)} > X</button>
 
 
     </div >

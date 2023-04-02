@@ -44,6 +44,16 @@ const reducer = (state: TodoListProperty[], action: ActionType) => {
           }
         })
       ];
+    case ACTIONS.DELETE_TODO:
+      return [
+        ...state.filter((el) => {
+          if (el.id !== action.payload.id) {
+            return {
+              ...el,
+            }
+          }
+        })
+      ];
     default:
       return state;
   }
@@ -74,8 +84,21 @@ const App: React.FC = () => {
 
   const handleEdit = (changedTodoString: string = '', id: number) => {
     // console.log(e.currentTarget.textContent, id);
-    dispatch({ type: ACTIONS.EDIT_TODO, payload: { id: id, item: changedTodoString, isDone: false } }) // Use ACTIONS here, empty 'item'
+    dispatch({ type: ACTIONS.EDIT_TODO, payload: { id: id, item: changedTodoString.trim(), isDone: false } }) // Use ACTIONS here, empty 'item'
   }
+
+  const handleDelete = (id: number) => {
+    // console.log(e.currentTarget.textContent, id);
+    dispatch({
+      type: ACTIONS.DELETE_TODO, payload: {
+        item: "",
+        isDone: false,
+        id: id
+      }
+    }) // Use ACTIONS here, empty 'item'
+  }
+
+
 
   console.log(todoList);
 
@@ -87,7 +110,7 @@ const App: React.FC = () => {
         addTodo={handleClick}
       />
       {/* Set isEmpty to check for truthiness */}
-      <List handleEdit={handleEdit} handleisDone={handleisDone} isEmpty={!!todoList.length} list={todoList} />
+      <List handleDelete={handleDelete} handleEdit={handleEdit} handleisDone={handleisDone} isEmpty={!!todoList.length} list={todoList} />
     </div>
   );
 };
