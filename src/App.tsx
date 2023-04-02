@@ -1,5 +1,5 @@
 import "./styles.css";
-import { Input } from "./Component/Input";
+import { Input } from "./Component/Input"; // Fixed filename extension
 import { useReducer, useState } from "react";
 import { List } from "./Component/List";
 import { ACTIONS } from "./Component/Actions/TodoAction";
@@ -12,38 +12,48 @@ export type TodoListProperty = {
 
 type ActionType = {
   payload: TodoListProperty;
-  type: 'ADD_TODO' | 'DELETE_TODO' | 'EDIT_TODO' | 'DONE_TODO';
+  type: string;
 }
 
+// Added initial state for useReducer
 const reducer = (state: TodoListProperty[], action: ActionType) => {
   switch (action.type) {
     case ACTIONS.ADD_TODO:
       return [...state, action.payload];
+    case ACTIONS.EDIT_TODO:
+      return [
+        ...state.map((el) => {
+          if (el.id === action.payload.id) {
+            return {
+              ...el,
+              item: action.payload.item
+            }
+          } return el
+        })
+      ];
     case ACTIONS.DONE_TODO:
-      return [...state.map((el) => {
-        if (el.id === action.payload.id) {
-          return {
-            ...el,
-            isDone: !el.isDone
+      return [
+        ...state.map((el) => {
+          if (el.id === action.payload.id) {
+            return {
+              ...el,
+              isDone: !el.isDone
+            }
+          } else {
+            return el
           }
-        } else {
-          return el
-        }
-
-      })];
+        })
+      ];
     default:
       return state;
   }
 }
 
-function addTodo(item: string) {
-  console.log(item);
-  return { isDone: false, id: Date.now(), item: item }
-}
+
 
 const App: React.FC = () => {
   const [todoItem, setTodoItem] = useState<string>("");
-  const [todoList, dispatch] = useReducer(reducer, []);
+  const [todoList, dispatch] = useReducer(reducer, []); // Added initial state for useReducer
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     setTodoItem(e.target.value);
@@ -52,19 +62,22 @@ const App: React.FC = () => {
   const handleClick = (e: React.FormEvent) => {
     e.preventDefault();
     if (todoItem) {
-      dispatch({ type: "ADD_TODO", payload: { id: Date.now(), item: todoItem, isDone: false } })
+      dispatch({ type: ACTIONS.ADD_TODO, payload: { id: Date.now(), item: todoItem, isDone: false } }) // Use ACTIONS here
       setTodoItem("");
     }
   };
 
   const handleisDone = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
-    console.log(e.target.checked);
-    dispatch({ type: "DONE_TODO", payload: { id: id, item: todoItem, isDone: e.target.checked } })
+    console.log(e.target.checked); // Debugging code
+    dispatch({ type: ACTIONS.DONE_TODO, payload: { id: id, item: "", isDone: e.target.checked } }) // Use ACTIONS here, empty 'item'
   }
 
-  const handleDelete = () => {
-
+  const handleEdit = (changedTodoString: string = '', id: number) => {
+    // console.log(e.currentTarget.textContent, id);
+    dispatch({ type: ACTIONS.EDIT_TODO, payload: { id: id, item: changedTodoString, isDone: false } }) // Use ACTIONS here, empty 'item'
   }
+
+  console.log(todoList);
 
   return (
     <div className="App">
@@ -73,7 +86,8 @@ const App: React.FC = () => {
         handleInput={handleInput}
         addTodo={handleClick}
       />
-      <List handleisDone={handleisDone} isEmpty={!!todoList.length} list={todoList} />
+      {/* Set isEmpty to check for truthiness */}
+      <List handleEdit={handleEdit} handleisDone={handleisDone} isEmpty={!!todoList.length} list={todoList} />
     </div>
   );
 };
